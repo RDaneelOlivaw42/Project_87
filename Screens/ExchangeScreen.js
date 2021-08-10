@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Touchable } from 'react-native';
 import firebase from 'firebase';
 import db from '../config';
 
@@ -22,9 +22,7 @@ export default class ExchangeScreen extends React.Component {
             requestId: '',
             objectStatus: '',
 
-            isBarterActive: '',
-
-            isUserQueryWorking: ''
+            isBarterActive: ''
         }
     }
 
@@ -179,49 +177,94 @@ export default class ExchangeScreen extends React.Component {
 
 
     render(){
-        return(
-            <View>
+        if(this.state.isBarterActive === true){
+            return(
+                <View>
+                    <AppHeader title = "Exchange Articles" />
 
-                <AppHeader title = "Exchange Articles"/>
-                <Text>{this.state.isUserQueryWorking}</Text>
+                    <View>
+                        <Text style = {styles.activeRequestText}>You already have an active request</Text>
 
-                <View style = {styles.container}>
+                        <View>
+                            <Text>Object Name: </Text>
+                            <Text>{this.state.requestedObjectName}</Text>
+                        </View>
 
-                    <TextInput 
-                      style = {styles.formInput}
-                      placeholder = "Enter the object to request"
-                      placeholderTextColor = '#F6C4B2'
-                      autoFocus = {true}
-                      onChangeText = {(text)=>{
-                        this.setState({
-                          objectName:text
-                         })
-                      }}/>
+                        <View>
+                            <Text>Object Status: </Text>
+                            <Text>{this.state.objectStatus}</Text>
+                        </View>
 
-                    <TextInput 
-                      style = {styles.formInput}
-                      placeholder = "Describe the aforementioned object"
-                      placeholderTextColor = '#F6C4B2'
-                      onChangeText = {(text)=>{
-                        this.setState({
-                          objectDescription: text
-                        })
-                      }}
-                      multiline = {true}
-                      numberOfLines = {11}/>
-
-                    <TouchableOpacity
-                      style = {styles.submitButton}
-                      onPress = {()=>{
-                        this.addRequest(this.state.objectName, this.state.objectDescription);
-                        alert("Added Request");
-                      }}>
-                        <Text style = {styles.submitButtonText}>SUBMIT</Text>
-                    </TouchableOpacity>
-
+                        <View>
+                            <TouchableOpacity
+                              style = {styles.receivedButton}
+                              onPress = {()=>{
+                                 this.sendNotification();
+                                 this.updateObjectStatusAndUserBarter();
+                                 this.forReceivedObjects(this.state.objectName);
+                              }}>
+                               <Text>Received the Object</Text>
+                           </TouchableOpacity>
+                        </View>
+                    </View>
+                    
                 </View>
-            </View>
-        )
+            )
+        }
+        else{
+            return(
+                <View>
+    
+                    <AppHeader title = "Exchange Articles"/>
+                    <Text>{this.state.isUserQueryWorking}</Text>
+    
+                    <View style = {styles.container}>
+    
+                        <TextInput 
+                          style = {styles.formInput}
+                          placeholder = "Enter the object to request"
+                          placeholderTextColor = '#F6C4B2'
+                          autoFocus = {true}
+                          onChangeText = {(text)=>{
+                            this.setState({
+                              objectName:text
+                             })
+                          }}/>
+    
+                        <TextInput 
+                          style = {styles.formInput}
+                          placeholder = "Describe the aforementioned object"
+                          placeholderTextColor = '#F6C4B2'
+                          onChangeText = {(text)=>{
+                            this.setState({
+                              objectDescription: text
+                            })
+                          }}
+                          multiline = {true}
+                          numberOfLines = {11}/>
+    
+                        <TouchableOpacity
+                          style = {styles.submitButton}
+                          onPress = {()=>{
+                            this.addRequest(this.state.objectName, this.state.objectDescription);
+                            alert("Added Request");
+                          }}>
+                            <Text style = {styles.submitButtonText}>SUBMIT</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity 
+                          onPress = {()=>{
+                              this.setState({
+                                  isBarterActive: true
+                              })
+                          }}>
+                            <Text>View other</Text>
+                        </TouchableOpacity>
+    
+                    </View>
+                </View>
+            )
+        }
     }
 
 }
