@@ -35,8 +35,28 @@ export default class ExchangeScreen extends React.Component {
             snapshot.forEach( (doc)=>{
 
                 this.setState({
-                    isBarterActive: doc.data().is_barter_active
+                    isBarterActive: doc.data().is_barter_proposed
                 })
+
+            })
+        });
+
+        db.collection('requested_items')
+        .where('user','==',this.state.userId)
+        .get()
+        .then( (snapshot)=>{
+            snapshot.forEach( (doc)=>{
+
+                if( doc.data().object_status === "requested" ){
+                    this.setState({
+                        isBarterActive: true
+                    })
+                }
+                else{
+                    this.setState({
+                        isBarterActive: false
+                    })
+                }
 
             })
         });
@@ -64,7 +84,7 @@ export default class ExchangeScreen extends React.Component {
             })
         });
     }
-
+    
 
     generateId(){
         var id = Math.random().toString(36).substring(7);
@@ -122,15 +142,15 @@ export default class ExchangeScreen extends React.Component {
         db.collection('completed_barters').add({
             'user_id': userId,
             'object_name': objectName,
+            'object_status': "received",
             'request_id': requestId,
-            'object_status': "received"
         });
     }
 
 
     updateObjectStatusAndUserBarter = () => {
         
-        db.collection('users').doc(this.state.docId).update({
+        db.collection('requested_items').doc(this.state.docId).update({
             object_status: "received"
         });
 
@@ -166,7 +186,16 @@ export default class ExchangeScreen extends React.Component {
                 .then( (snapshot)=>{
                     snapshot.forEach( (doc)=>{
 
-                        var donorId = doc.data()
+                        var reciprocatorId = doc.data().reciprocator_id
+                        var objectName = doc.data().object_name
+
+                        db.collection('all_notifications').add({
+                            'targeted_user_id': reciprocatorId,
+                            'message': firstName + " " + lastName + " has received the object",
+                            'notification_status': "unread",
+                            'object_name': objectName
+                        })
+
                     })
                 })
 
@@ -250,15 +279,6 @@ export default class ExchangeScreen extends React.Component {
                             alert("Added Request");
                           }}>
                             <Text style = {styles.submitButtonText}>SUBMIT</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity 
-                          onPress = {()=>{
-                              this.setState({
-                                  isBarterActive: true
-                              })
-                          }}>
-                            <Text>View other</Text>
                         </TouchableOpacity>
     
                     </View>
