@@ -211,17 +211,17 @@ export default class ExchangeScreen extends React.Component {
                 <View>
                     <AppHeader title = "Exchange Articles" />
 
-                    <View>
+                    <View style = {styles.activeRequestScreen}>
                         <Text style = {styles.activeRequestText}>You already have an active request</Text>
 
-                        <View>
-                            <Text>Object Name: </Text>
-                            <Text>{this.state.requestedObjectName}</Text>
+                        <View style = {styles.activeRequestLabel}>
+                            <Text style = {[ styles.defaultText,  { fontWeight: 'bold' } ]}>Object Name: </Text>
+                            <Text style = {styles.defaultText}>{this.state.requestedObjectName}</Text>
                         </View>
 
-                        <View>
-                            <Text>Object Status: </Text>
-                            <Text>{this.state.objectStatus}</Text>
+                        <View style = {styles.activeRequestLabel}>
+                            <Text style = {[ styles.defaultText,  { fontWeight: 'bold' } ]}>Object Status: </Text>
+                            <Text style = {styles.defaultText}>{this.state.objectStatus}</Text>
                         </View>
 
                         <View>
@@ -232,7 +232,7 @@ export default class ExchangeScreen extends React.Component {
                                  this.updateObjectStatusAndUserBarter();
                                  this.forReceivedObjects(this.state.objectName);
                               }}>
-                               <Text>Received the Object</Text>
+                               <Text style = {[ styles.defaultText, { fontSize: 16 } ]}>RECEIVED THE OBJECT</Text>
                            </TouchableOpacity>
                         </View>
                     </View>
@@ -325,6 +325,41 @@ const styles = StyleSheet.create({
         fontFamily: 'big caslon',
         textAlign: 'center',
         fontSize: 19
+    },
+
+    activeRequestScreen: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 30
+    },
+
+    activeRequestText: {
+        fontFamily: 'big caslon',
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        fontSize: 20,
+    },
+
+    activeRequestLabel: {
+        marginTop: 25,
+        padding: 10,
+        width: '75%',
+        borderColor: '#AE8277',
+        borderWidth: 3
+    },
+
+    defaultText: { 
+        fontFamily: 'big caslon' 
+    },
+
+    receivedButton: {
+        padding: 19,
+        backgroundColor: '#5C96B6',
+        shadowColor: '#31565F',
+        shadowOffset: {width: 5, height: 5},
+        shadowRadius: 4,
+        margin: 30
     }
 
 })
