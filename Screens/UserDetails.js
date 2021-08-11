@@ -29,47 +29,13 @@ export default class UserDetails extends React.Component {
     }
   }
 
-  /*
-  getRecieverDetails(){
-
-    db.collection("users")
-    .where("email_id",'==',this.state.recieverId)
-    .get()
-    .then( (snapshot) => {
-      snapshot.forEach( (doc) => {
-
-        var data = doc.data()
-        this.setState({
-          recieverName: data.first_name,
-          recieverContact: data.contact,
-          recieverAddress: data.address
-        })
-
-      })
-    });
-
-    db.collection("requested_books")
-    .where("request_id",'==',this.state.requestId)
-    .get()
-    .then( (snapshot) => {
-      snapshot.forEach( (doc) => {
-
-        this.setState({
-          recieverRequestDocId: doc.id
-        })
-
-      })
-    });
-
-  }
-   */
-
 
   getRecieverDetails(){
     var email_id = this.state.recieverId
 
     db.collection('users')
-    .where('email_id','==',email_id)
+    //.where('email_id','==',email_id)
+    .where('email_id','==',"")
     .get()
     .then( (snapshot)=>{
       snapshot.forEach( (doc)=>{
@@ -119,7 +85,7 @@ export default class UserDetails extends React.Component {
     db.collection('all_barters').add({
       object_name: this.state.objectName,
       request_id: this.state.requestId,
-      initiated_by: this.state.recieverName,
+      initiated_by: this.state.recieverId,
       reciprocated_by: this.state.userId,
       request_status: "User Interested"
     });
@@ -199,7 +165,8 @@ export default class UserDetails extends React.Component {
 
         <View style = {styles.buttonContainer}>
           {
-            this.state.userId !== this.state.recieverId ?
+            this.state.userId === this.state.recieverId ?
+            null : 
             (
               <TouchableOpacity 
                 style = {styles.button}
@@ -210,7 +177,7 @@ export default class UserDetails extends React.Component {
                 }} >
                 <Text style = {styles.buttonText}>PROCEED  WITH  BARTER</Text>
               </TouchableOpacity>
-            ) : null
+            )
           }
         </View>
 
@@ -225,7 +192,9 @@ const styles = StyleSheet.create({
 
   cardContainer: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 150
   },
 
   card: {
@@ -252,7 +221,6 @@ const styles = StyleSheet.create({
 
   buttonContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center'
   },
 
