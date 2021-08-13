@@ -16,6 +16,7 @@ export default class MyReceivedObjects extends React.Component {
         }
 
         this.requestRef = null;
+        this.objectsRef = null;
     }
 
 
@@ -33,8 +34,24 @@ export default class MyReceivedObjects extends React.Component {
     }
 
 
+    getAllReceivedObjectsBackUp(){
+        this.objectsRef - db.collection('requested_items')
+        .where('object_status','==',"received")
+        .where('user','==',this.state.userId)
+        .onSnapshot( (snapshot)=>{
+
+            var allReceivedObjects = snapshot.docs.map( (document) => document.data() )
+            this.setState({
+                allReceivedObjects: allReceivedObjects
+            })
+
+        });
+    }
+
+
     componentDidMount(){
         this.getAllReceivedObjects();
+        this.getAllReceivedObjectsBackUp();
     }
 
 

@@ -205,6 +205,24 @@ export default class ExchangeScreen extends React.Component {
     }
 
 
+    setStatusInRequested_Items = () => {
+        db.collection('requested_items')
+        .where('request_id','==',this.state.requestId)
+        .where('object_name','==',this.state.objectName)
+        .where('user_id','==',this.state.userId)
+        .get()
+        .then( (snapshot)=>{
+            snapshot.forEach( (doc)=>{
+
+                db.collection('requested_items').doc(doc.id).set({
+                    object_status: 'received'
+                })
+
+            })
+        });
+    }
+
+
     render(){
         if(this.state.isBarterActive === true){
             return(
@@ -231,6 +249,7 @@ export default class ExchangeScreen extends React.Component {
                                  this.sendNotification();
                                  this.updateObjectStatusAndUserBarter();
                                  this.forReceivedObjects(this.state.objectName);
+                                 this.setStatusInRequested_Items();
                               }}>
                                <Text style = {[ styles.defaultText, { fontSize: 16 } ]}>RECEIVED THE OBJECT</Text>
                            </TouchableOpacity>
