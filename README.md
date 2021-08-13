@@ -1,7 +1,5 @@
-# Project 86
+# Project 87
 
-Barter System App, Stage 11
+Barter System App, Stage 12
 
-Added Functionality to limit active requests for a user only one at a time. 
-<br>
-Added MyReceivedObjects.js screen.
+Added functionality to display Profile Picture and User Name in CustomSideBarMenu.js
